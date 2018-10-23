@@ -30,6 +30,7 @@ class Game:
         self.timer2 = 4500
 
         self.settings = Settings()
+        self.stats = GameStats(self.settings)
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Pacman Portal")
 
@@ -37,9 +38,8 @@ class Game:
         self.maze = Maze(self.screen, self.settings, self.pac, self.points, self.pills, self.fruits,
                          mazefile='images/maze.txt', brickfile='square')
         self.portal = Portal(self.screen, self.settings)
-        self.pacman = Pacman(self.screen, self.settings, self.maze, self.portal)
+        self.pacman = Pacman(self.screen, self.settings, self.maze, self.portal, self.stats)
 
-        self.stats = GameStats(self.settings)
         self.sb = Scoreboard(self.settings, self.screen, self.stats, self.maze, self.portal)
         self.play_button = Startup(self.screen, self.settings, 'Play')
         self.score_button = HighScores(self.screen, "High Scores", self.settings)
@@ -102,6 +102,9 @@ class Game:
             self.pills.draw(self.screen)
             self.fruits.draw(self.screen)
             self.ghosts.draw(self.screen)
+            if not self.settings.play_once:
+                self.settings.ghost.play(-1)
+                self.settings.play_once = True
             self.sb.show_score()
         pygame.display.flip()
 

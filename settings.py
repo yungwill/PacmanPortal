@@ -21,6 +21,8 @@ class Settings:
         # How quickly the game speeds up
         self.speedup_scale = 1.1
 
+        self.play_once = False
+
         self.music = pygame.mixer.Sound('sounds/pacman_beginning.wav')
         self.death = pygame.mixer.Sound('sounds/pacman_death.wav')
         self.eat_fruit = pygame.mixer.Sound('sounds/pacman_eatfruit.wav')
@@ -28,8 +30,10 @@ class Settings:
         self.eat_pill = pygame.mixer.Sound('sounds/eat_pill.wav')
         self.eat = pygame.mixer.Sound('sounds/eat.wav')
         self.scared_ghost = pygame.mixer.Sound('sounds/scared_ghost.wav')
+        self.ghost = pygame.mixer.Sound('sounds/ghost.wav')
 
     def increase_speed(self):
         """Increase speed settings and alien point values"""
         self.pacman_speed_factor *= self.speedup_scale
         self.ghost_speed_factor *= self.speedup_scale
+

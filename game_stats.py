@@ -7,11 +7,15 @@ class GameStats:
         self.reset_stats()
         self.game_active = False
         self.score_screen_active = False
-        # Start game in an inactive state
+        # Start game in an inactive flags
+        self.ghost_scared = False
+        self.ghost_points = False
+
         # Flag for if pacman is hit
         self.pacman_hit = False
-        # High score should never be reset
-        self.high_score = 0
+        self.pacman_dead = False
+        self.index = 0
+
         self.score = 0
 
         self.pacmen_left = self.settings.pacmen_limit

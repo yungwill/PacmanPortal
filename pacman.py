@@ -4,21 +4,23 @@ from pygame.sprite import Sprite
 
 class Pacman(Sprite):
     """Pacman Sprite that controls all of Pacman's attributes"""
-    def __init__(self, screen, settings, maze, portal):
+    def __init__(self, screen, settings, maze, portal, stats):
         super().__init__()
         self.screen = screen
         self.settings = settings
+        self.stats = stats
         self.maze = maze
         self.portal = portal
 
         self.img = {0: 'images/Pacman.bmp',
                     1: 'images/Pacman2.bmp'}
 
-        self.death_img = {0: 'images/pacman_death1.bmp',
-                          1: 'images/pacman_death2.bmp',
-                          2: 'images/pacman_death3.bmp',
-                          3: 'images/pacman_death4.bmp',
-                          4: 'images/pacman_death5.bmp'}
+        self.death_img = {0: 'images/Pacman.bmp',
+                          1: 'images/pacman_death1.bmp',
+                          2: 'images/pacman_death2.bmp',
+                          3: 'images/pacman_death3.bmp',
+                          4: 'images/pacman_death4.bmp',
+                          5: 'images/pacman_death5.bmp'}
 
         self.image = pygame.image.load(self.img[0])
         self.left_image = pygame.transform.flip(self.image, True, False)
@@ -39,9 +41,7 @@ class Pacman(Sprite):
         self.count_down = 0
         self.delay = 0
         self.delay2 = 0
-        self.index = 0
 
-        self.able_move = True
         self.moving_right = False
         self.moving_left = False
         self.moving_up = False
@@ -87,7 +87,7 @@ class Pacman(Sprite):
 
         # Animates pacman when he is moving
         if self.moving_right or self.moving_left or self.moving_up or self.moving_down:
-            if not self.animate and self.delay == 50 and self.able_move:
+            if not self.animate and self.delay == 50:
                 if self.moving_right:
                     self.image = pygame.image.load(self.img[0])
                 if self.moving_left:
@@ -98,7 +98,7 @@ class Pacman(Sprite):
                     self.image = self.down_image
                 self.animate = True
                 self.delay = 0
-            if self.animate and self.delay == 50 and self.able_move:
+            if self.animate and self.delay == 50:
                 self.image = pygame.image.load(self.img[1])
                 self.animate = False
                 self.delay = 0
@@ -108,28 +108,28 @@ class Pacman(Sprite):
                 self.delay += 1
 
         # Moves when keys are pressed and not against a wall
-        if self.moving_right and not Pacman.check_right_wall(self) and self.able_move:
+        if self.moving_right and not Pacman.check_right_wall(self):
             self.rect.centerx += self.settings.pacman_speed_factor
             self.count_right += 1
             if self.count_right == 13:
                 self.array_x += 1
                 self.count_right = 0
 
-        if self.moving_left and not Pacman.check_left_wall(self) and self.able_move:
+        if self.moving_left and not Pacman.check_left_wall(self):
             self.rect.centerx -= self.settings.pacman_speed_factor
             self.count_left += 1
             if self.count_left == 13:
                 self.array_x -= 1
                 self.count_left = 0
 
-        if self.moving_up and not Pacman.check_top_wall(self) and self.able_move:
+        if self.moving_up and not Pacman.check_top_wall(self):
             self.rect.centery -= self.settings.pacman_speed_factor
             self.count_up += 1
             if self.count_up == 13:
                 self.array_y -= 1
                 self.count_up = 0
 
-        if self.moving_down and not Pacman.check_bottom_wall(self) and self.able_move:
+        if self.moving_down and not Pacman.check_bottom_wall(self):
             self.rect.centery += self.settings.pacman_speed_factor
             self.count_down += 1
             if self.count_down == 13:
@@ -137,15 +137,14 @@ class Pacman(Sprite):
                 self.count_down = 0
 
         # Suppose to loop through to show pacman's death
-        if self.delay2 == 50 and self.index < 5 and self.dead:
-            self.image = pygame.image.load(self.death_img[self.index])
-            self.index += 1
+        if self.delay2 == 100 and self.stats.index < 6 and self.stats.pacman_dead:
+            self.image = pygame.image.load(self.death_img[self.stats.index])
+            self.stats.index += 1
             self.delay2 = 0
-        elif self.index >= 5 and self.dead:
-            self.index = 0
-            self.dead = False
-            self.able_move = True
-        else:
+        elif self.stats.index >= 6 and self.stats.pacman_dead:
+            self.stats.index = 0
+            self.stats.pacman_dead = False
+        elif self.stats.pacman_dead:
             self.delay2 += 1
 
     def draw_portal(self):
