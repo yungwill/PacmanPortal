@@ -36,4 +36,3 @@ class Settings:
         """Increase speed settings and alien point values"""
         self.pacman_speed_factor *= self.speedup_scale
         self.ghost_speed_factor *= self.speedup_scale
-
